@@ -7,6 +7,7 @@ import com.luv2code.springmvc.service.StudentAndGradesService;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -48,10 +49,36 @@ class GradebookControllerTest {
     @Autowired
     StudentDao studentDao;
 
+    @Value("${sql.scripts.create.student}")
+    String sqlAddStudent;
+
+    @Value("${sql.scripts.create.math.grade}")
+    String sqlAddMathGrade;
+
+    @Value("${sql.scripts.create.science.grade}")
+    String sqlAddScienceGrade;
+
+    @Value("${sql.scripts.create.history.grade}")
+    String sqlAddHistoryGrade;
+
+    @Value("${sql.scripts.delete.student}")
+    String sqlDeleteStudent;
+
+    @Value("${sql.scripts.delete.math.grade}")
+    String sqlDeleteMathGrade;
+
+    @Value("${sql.scripts.delete.science.grade}")
+    String sqlDeleteScienceGrade;
+
+    @Value("${sql.scripts.delete.history.grade}")
+    String sqlDeleteHistoryGrade;
+
     @BeforeEach
     void beforeEach() {
-        jdbcTemplate.execute("INSERT INTO student(firstname, lastName, email_address) " +
-                "Values ('Eric', 'Roby', 'eric.roby@luv2code_school.com')");
+        jdbcTemplate.execute(sqlAddStudent);
+        jdbcTemplate.execute(sqlAddMathGrade);
+        jdbcTemplate.execute(sqlAddScienceGrade);
+        jdbcTemplate.execute(sqlAddHistoryGrade);
     }
 
     @BeforeAll
@@ -134,8 +161,10 @@ class GradebookControllerTest {
 
     @AfterEach
     void setupAfterTransaction() {
-        jdbcTemplate.execute("DELETE FROM student");
-        jdbcTemplate.execute("ALTER TABLE student ALTER COLUMN ID RESTART WITH 1");
+        jdbcTemplate.execute(sqlDeleteStudent);
+        jdbcTemplate.execute(sqlDeleteMathGrade);
+        jdbcTemplate.execute(sqlDeleteScienceGrade);
+        jdbcTemplate.execute(sqlDeleteHistoryGrade);
     }
 
 }
