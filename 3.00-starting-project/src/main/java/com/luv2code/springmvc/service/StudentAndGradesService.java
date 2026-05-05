@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,5 +160,34 @@ public class StudentAndGradesService {
         return new GradebookCollegeStudent(lCollegeStudent.getId(), lCollegeStudent.getFirstname(),
                 lCollegeStudent.getLastname(), lCollegeStudent.getEmailAddress(), studentGrades);
 
+    }
+
+    public void configureStudentInformationModel(int pStudentId, Model m) {
+        GradebookCollegeStudent lGradebookCollegeStudent = studentinformation(pStudentId);
+        m.addAttribute("student", lGradebookCollegeStudent);
+        if (!lGradebookCollegeStudent.getStudentGrades().getMathGradeResults().isEmpty()) {
+            m.addAttribute("mathAverage", lGradebookCollegeStudent.getStudentGrades().findGradePointAverage(
+                    lGradebookCollegeStudent.getStudentGrades().getMathGradeResults()
+            ));
+        }
+        else {
+            m.addAttribute("mathAverage", "N/A");
+        }
+        if (!lGradebookCollegeStudent.getStudentGrades().getScienceGradeResults().isEmpty()) {
+            m.addAttribute("scienceAverage", lGradebookCollegeStudent.getStudentGrades().findGradePointAverage(
+                    lGradebookCollegeStudent.getStudentGrades().getScienceGradeResults()
+            ));
+        }
+        else {
+            m.addAttribute("scienceAverage", "N/A");
+        }
+        if (!lGradebookCollegeStudent.getStudentGrades().getHistoryGradeResults().isEmpty()) {
+            m.addAttribute("historyAverage", lGradebookCollegeStudent.getStudentGrades().findGradePointAverage(
+                    lGradebookCollegeStudent.getStudentGrades().getHistoryGradeResults()
+            ));
+        }
+        else {
+            m.addAttribute("historyAverage", "N/A");
+        }
     }
 }
